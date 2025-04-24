@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Cookies from 'js-cookie';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   faChevronLeft, 
   faChevronRight,
@@ -11,22 +13,28 @@ import {
   faUser,
   faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
-import Logo from '../../assets/img/logo.png';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    // Add logout logic here
+    // Remove tokens from cookies
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    
+    // Use auth context logout
+    logout();
+    
+    // Navigate to login
     navigate('/login');
   };
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
-        <img src={Logo} alt="Logo" className="logo" />
         <button 
           className="collapse-btn"
           onClick={() => setIsCollapsed(!isCollapsed)}

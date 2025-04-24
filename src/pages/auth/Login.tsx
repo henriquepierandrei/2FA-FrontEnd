@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useAuth } from '../../contexts/AuthContext';
 import './Login.css';
 
 interface TokenResponse {
@@ -20,6 +21,7 @@ function Login() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,19 +65,18 @@ function Login() {
         sameSite: 'strict'
       });
 
+      // Update authentication state using context
+      login(access_token, refresh_token);
+
       // Salvar email em cookie se "lembrar-me" estiver marcado
       if (rememberMe) {
-        Cookies.set('rememberedEmail', email, { expires: 30 }); // expira em 30 dias
+        Cookies.set('rememberedEmail', email, { expires: 30 });
       } else {
         Cookies.remove('rememberedEmail');
       }
 
       setSuccess("Login bem sucedido!");
-
-      // Redireciona após 1 segundo
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+      navigate("/dashboard");
 
     } catch (err) {
       console.error("Erro no login:", err);
