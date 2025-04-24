@@ -1,4 +1,4 @@
-  .login-container {
+.login-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -334,6 +334,31 @@
         transform: translateY(-100vh) rotate(360deg);
         opacity: 0;
     }
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.success-message {
+  color: #22c55e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.show-password-button {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.show-password-button:hover {
+  color: var(--primary-dark);
 }
 
 /* Responsividade */

@@ -1,12 +1,95 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import './Login.css';
+
+interface TokenResponse {
+  access_token: string;
+  refresh_token: string;
+  access_token_expires_in: number;
+  refresh_token_expires_in: number;
+}
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const navigate = useNavigate();
 
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      setError("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post<TokenResponse>(
+        "http://localhost:8080/api/v1/auth/login",
+        { email, password }
+      );
+
+      const { 
+        access_token, 
+        refresh_token, 
+        access_token_expires_in, 
+        refresh_token_expires_in 
+      } = response.data;
+
+      // Converter expirações de segundos para dias
+      const accessTokenExpiresInDays = access_token_expires_in / (24 * 60 * 60);
+      const refreshTokenExpiresInDays = refresh_token_expires_in / (24 * 60 * 60);
+
+      // Salvar tokens em cookies seguros
+      Cookies.set('accessToken', access_token, {
+        expires: accessTokenExpiresInDays,
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      Cookies.set('refreshToken', refresh_token, {
+        expires: refreshTokenExpiresInDays,
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      // Salvar email em cookie se "lembrar-me" estiver marcado
+      if (rememberMe) {
+        Cookies.set('rememberedEmail', email, { expires: 30 }); // expira em 30 dias
+      } else {
+        Cookies.remove('rememberedEmail');
+      }
+
+      setSuccess("Login bem sucedido!");
+
+      // Redireciona após 1 segundo
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+
+    } catch (err) {
+      console.error("Erro no login:", err);
+      setError("Credenciais inválidas. Verifique seu email e senha.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Atualize o JSX do formulário para incluir o onSubmit e o botão de mostrar senha
   return (
     <div className="login-container">
       <div className="login-card">
@@ -15,7 +98,7 @@ function Login() {
           <p>Ou <a href="/register" className="signup-link">cadastre-se gratuitamente</a></p>
         </div>
         
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="email">E-mail</label>
             <input
@@ -33,12 +116,18 @@ function Login() {
           <div className="form-group">
             <div className="password-header">
               <label htmlFor="password">Senha</label>
-              <a href="#" className="forgot-password">Esqueceu a senha?</a>
+              <button 
+                type="button" 
+                className="show-password-button"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? 'Ocultar' : 'Mostrar'}
+              </button>
             </div>
             <input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               required
               value={password}
@@ -85,6 +174,9 @@ function Login() {
               </button>
             </div>
           </div>
+
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
         </form>
       </div>
     </div>

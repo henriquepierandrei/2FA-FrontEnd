@@ -1,28 +1,24 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { Navigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-const PrivateRoute = () => {
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
-  console.log("🛡️ PrivateRoute -> isAuthenticated:", isAuthenticated);
-  console.log("🕒 PrivateRoute -> isLoading:", isLoading);
+  console.log('🛡️ PrivateRoute -> isAuthenticated:', isAuthenticated);
+  console.log('🕒 PrivateRoute -> isLoading:', isLoading);
 
-  // Exibe uma mensagem de carregamento enquanto a autenticação é verificada
   if (isLoading) {
-    console.log("⏳ Carregando autenticação...");
-    return <div><LoadingSpinner /></div>;
+    console.log('⏳ Carregando autenticação...');
+    return <div>Carregando...</div>;
   }
 
-  // Se não estiver autenticado, redireciona para o login
   if (!isAuthenticated) {
-    console.log("🚫 Usuário não autenticado, redirecionando para o login.");
-    return <Navigate to="/login" replace />;
+    console.log('🚫 Usuário não autenticado, redirecionando para o login.');
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Se autenticado, renderiza a rota privada
-  console.log("✅ Usuário autenticado, renderizando página.");
-  return <Outlet />;
+  return <>{children}</>;
 };
 
 export default PrivateRoute;

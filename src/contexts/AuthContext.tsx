@@ -1,107 +1,98 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { parseCookies, setCookie } from "nookies";
+import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import {isTokenExpired} from '../api/api'
+import Cookies from 'js-cookie';
 
-
-
-// Contexto de autenticação
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (token: string) => void;
+  login: (accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Função para verificar a autenticação
   useEffect(() => {
-    console.log("🔄 Verificando autenticação...");
-    checkAuth();
-  }, []);
+    const verifyAuth = async () => {
+      console.log('🔄 Verificando autenticação...');
+      const accessToken = Cookies.get('accessToken');
+      const refreshToken = Cookies.get('refreshToken');
 
-  const checkAuth = async () => {
-    const token = parseCookies()["accessToken"];
-  
-    if (!token) {
-      console.log("❌ Nenhum token encontrado. Usuário não autenticado.");
-      setIsAuthenticated(false);
-      setIsLoading(false);
-      return;
-    }
-  
-    if (isTokenExpired(token)) {
-      console.log("⏳ Token expirado. Tentando renovar...");
-  
+      if (!accessToken && !refreshToken) {
+        console.log('❌ Nenhum token encontrado. Usuário não autenticado.');
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const refreshToken = parseCookies()["refreshToken"];
-        if (!refreshToken) throw new Error("Refresh token não encontrado");
-  
-        const response = await axios.post("http://localhost:8080/api/v1/auth/refresh", {
-          refreshToken,
+        // Tenta validar o access token atual
+        await axios.get('http://localhost:8080/api/v1/auth/validate', {
+          headers: { Authorization: `Bearer ${accessToken}` }
         });
-  
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
-  
-        // Atualiza os cookies com os novos tokens
-        setCookie(null, "accessToken", newAccessToken, { maxAge: 30 * 24 * 60 * 60, path: "/" });
-        setCookie(null, "refreshToken", newRefreshToken, { maxAge: 30 * 24 * 60 * 60, path: "/" });
-  
-        console.log("✅ Token renovado. Usuário autenticado.");
         setIsAuthenticated(true);
       } catch (error) {
-        console.error("❌ Erro ao renovar o token:", error);
-        logout();
+        if (!refreshToken) {
+          setIsAuthenticated(false);
+          return;
+        }
+
+        try {
+          // Tenta renovar o token usando o refresh token
+          const response = await axios.post('http://localhost:8080/api/v1/auth/refresh', {
+            refreshToken
+          });
+
+          const { 
+            access_token, 
+            refresh_token,
+            access_token_expires_in,
+            refresh_token_expires_in
+          } = response.data;
+
+          // Atualiza os cookies com os novos tokens
+          Cookies.set('accessToken', access_token, {
+            expires: access_token_expires_in / (24 * 60 * 60),
+            secure: true,
+            sameSite: 'strict'
+          });
+
+          Cookies.set('refreshToken', refresh_token, {
+            expires: refresh_token_expires_in / (24 * 60 * 60),
+            secure: true,
+            sameSite: 'strict'
+          });
+
+          setIsAuthenticated(true);
+          console.log('✅ Token renovado com sucesso!');
+        } catch (refreshError) {
+          console.log('❌ Falha ao renovar o token.');
+          setIsAuthenticated(false);
+          // Limpa os cookies expirados
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } else {
-      console.log("✅ Token válido! Usuário autenticado.");
-      setIsAuthenticated(true);
-    }
-  
-    setIsLoading(false);
-  };
-  
+    };
 
-  // Função de login
-  const login = async (token: string) => {
-    // Salva o token no cookie
-    setCookie(null, "accessToken", token, {
-      maxAge: 30 * 24 * 60 * 60, // 30 dias
-      path: "/",
-      secure: process.env.NODE_ENV === "production", // Apenas HTTPS em produção
-      sameSite: "lax", // Política de segurança
-    });
-  
-    console.log("🔑 Token salvo:", token);
-  
-    // Aguarda um pequeno atraso para garantir que o cookie seja salvo
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  
-    // Verifica se o cookie foi salvo corretamente
-    const savedToken = parseCookies()["accessToken"];
-    console.log("📌 Cookie salvo:", savedToken);
-  
-    // Atualiza o estado de autenticação
-    if (savedToken) {
-      setIsAuthenticated(true);
-      setIsLoading(false);
-    } else {
-      console.error("❌ Erro: Cookie não foi salvo corretamente.");
-    }
+    verifyAuth();
+  }, []);
+
+  const login = (accessToken: string, refreshToken: string) => {
+    Cookies.set('accessToken', accessToken);
+    Cookies.set('refreshToken', refreshToken);
+    setIsAuthenticated(true);
   };
 
-  // Função de logout
   const logout = () => {
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
     setIsAuthenticated(false);
-    setCookie(null, "accessToken", "", {
-      maxAge: -1, // Remove o cookie
-      path: "/",
-    });
   };
 
   return (
@@ -111,11 +102,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Hook para usar o contexto de autenticação
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
