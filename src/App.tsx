@@ -1,27 +1,40 @@
-import { useState } from 'react'
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext"; 
+import Login from "./pages/auth/Login";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isAuthenticated } = useAuth(); // Obtenha o estado de autenticação
 
   return (
-    <>
-      <div>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <Routes>
+        {/* Rotas públicas */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<Login />} />
+        </Route>
+
+        {/* Rotas privadas */}
+        <Route element={<PrivateRoute />}>
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        </Route>
+
+        {/* Rota padrão */}
+        <Route
+          path="*"
+          element={
+        isAuthenticated ? (
+          <Navigate to="/dashboard" replace />
+        ) : (
+          <Navigate to="/login" replace />
+        )
+          }
+        />
+      </Routes>
+    </div>
+  );
 }
 
-export default App
+export default App;
