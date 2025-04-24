@@ -1,0 +1,182 @@
+.api-keys-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  color: var(--text-dark);
+  font-size: 1.875rem;
+  font-weight: 600;
+}
+
+.create-key-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.create-key-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+.create-key-form {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.create-key-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--gray-hover);
+  border: 1px solid var(--gray-border);
+  color: var(--text-dark);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.confirm-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.keys-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.key-card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.key-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.key-icon {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.key-content {
+  margin-bottom: 1rem;
+}
+
+.key-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--background);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.key-value code {
+  flex: 1;
+  font-family: 'Roboto Mono', monospace;
+  color: var(--text-dark);
+  word-break: break-all;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.copy-btn:hover {
+  color: var(--primary-color);
+}
+
+.key-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+.delete-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: none;
+  border: 1px solid var(--gray-border);
+  color: #ef4444;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+.error-message,
+.success-message {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  background: #fee2e2;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.success-message {
+  background: #dcfce7;
+  border: 1px solid #22c55e;
+  color: #22c55e;
+}

@@ -1,0 +1,229 @@
+.account-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.profile-card,
+.security-card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--gray-border);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-header h2 {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-icon {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--gray-border);
+  background: var(--background);
+  color: var(--text-dark);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(109, 179, 63, 0.1);
+}
+
+.form-group input:disabled {
+  background: var(--gray-hover);
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.edit-btn:hover {
+  background: var(--primary-dark);
+}
+
+.save-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.save-btn:hover {
+  background: var(--primary-dark);
+}
+
+.cancel-btn {
+  background: var(--gray-hover);
+  color: var(--text-dark);
+  border: 1px solid var(--gray-border);
+}
+
+.cancel-btn:hover {
+  background: var(--background);
+}
+
+.security-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.security-info h3 {
+  color: var(--text-dark);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.security-info p {
+  color: var(--text-light);
+  font-size: 0.875rem;
+}
+
+.toggle-2fa-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--gray-hover);
+  color: var(--text-dark);
+  border: 1px solid var(--gray-border);
+}
+
+.toggle-2fa-btn.enabled {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.toggle-2fa-btn:hover {
+  background: var(--primary-dark);
+  color: white;
+}
+
+@media (max-width: 1024px) {
+  .account-container {
+    padding: 1rem;
+  }
+
+  .account-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .card-header {
+    padding: 1rem;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .edit-btn,
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .security-item {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .toggle-2fa-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-group input {
+    padding: 0.5rem;
+    font-size: 14px;
+  }
+
+  .security-info h3 {
+    font-size: 0.875rem;
+  }
+
+  .security-info p {
+    font-size: 0.75rem;
+  }
+}
