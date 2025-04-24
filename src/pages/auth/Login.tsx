@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './Login.css';
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -8,11 +9,10 @@ function Login() {
 
   return (
     <div className="login-container">
-      
       <div className="login-card">
         <div className="login-header">
           <h2>Acesse sua conta</h2>
-          <p>Ou <a href="#" className="signup-link">cadastre-se gratuitamente</a></p>
+          <p>Ou <a href="/register" className="signup-link">cadastre-se gratuitamente</a></p>
         </div>
         
         <form className="login-form">
@@ -83,7 +83,6 @@ function Login() {
                 <span className="google-icon"></span>
                 Google
               </button>
-             
             </div>
           </div>
         </form>

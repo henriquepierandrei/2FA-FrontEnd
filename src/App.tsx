@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext"; 
 import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 
@@ -14,6 +15,7 @@ function App() {
         {/* Rotas públicas */}
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Route>
 
         {/* Rotas privadas */}
