@@ -112,7 +112,16 @@
   background: var(--background);
   padding: 0.75rem;
   border-radius: 6px;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+.p-info-key{
+  font-size: 0.9rem;
+  color: var(--gray-border);
+}
+
+.h3-key-info{
+  color: var(--text-dark);
 }
 
 .key-value code {
@@ -128,6 +137,7 @@
   color: var(--text-light);
   cursor: pointer;
   padding: 0.25rem;
+  transition: all 0.2s ease;
 }
 
 .copy-btn:hover {
@@ -142,24 +152,28 @@
   color: var(--text-light);
 }
 
-.delete-btn {
-  width: 100%;
+.key-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-border);
+}
+
+.delete-key-btn {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem;
-  background: none;
-  border: 1px solid var(--gray-border);
-  color: #ef4444;
-  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.delete-btn:hover {
-  background: #fee2e2;
-  border-color: #ef4444;
+.delete-key-btn:hover {
+  background: #ef4444;
+  color: white;
 }
 
 .error-message,

@@ -1,72 +1,53 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTrash, faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
+import api from '../../services/api-route';
 import axios from 'axios';
 import './ApiKeys.css';
+import DeleteKeyModal from '../../components/DeleteKeyModal';
 
 interface ApiKey {
   id: string;
-  name: string;
-  key: string;
-  createdAt: string;
-  lastUsed?: string;
+  createdAt: string; // Format: "DD/MM/YYYY HH:mm:ss"
+  lastUsedAt: string; // Format: "DD/MM/YYYY HH:mm:ss"
 }
 
 const ApiKeys = () => {
-  const [keys, setKeys] = useState<ApiKey[]>([]);
-  const [isCreating, setIsCreating] = useState(false);
-  const [newKeyName, setNewKeyName] = useState('');
+  const [key, setKey] = useState<ApiKey | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchApiKeys();
+    fetchApiKey();
   }, []);
 
-  const fetchApiKeys = async () => {
+  const fetchApiKey = async () => {
     try {
-      const response = await axios.get('/api/v1/api-keys');
-      setKeys(response.data);
+      const response = await api.get('/key/get');
+      setKey(response.data);
+      console.log(response.data.createdAt);
     } catch (err) {
-      setError('Falha ao carregar as chaves API');
+      setError('Falha ao carregar a chave API');
     } finally {
       setLoading(false);
     }
   };
 
-  const createApiKey = async () => {
-    if (!newKeyName.trim()) {
-      setError('O nome da chave é obrigatório');
+  const generateNewKey = async () => {
+    if (!window.confirm('Gerar uma nova chave irá invalidar a chave atual. Deseja continuar?')) {
       return;
     }
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/v1/api-keys', { name: newKeyName });
-      setKeys([...keys, response.data]);
-      setSuccess('Chave API criada com sucesso!');
-      setNewKeyName('');
-      setIsCreating(false);
+      const response = await axios.post('/api/v1/key/generate');
+      setKey(response.data);
+      setSuccess('Nova chave API gerada com sucesso!');
     } catch (err) {
-      setError('Erro ao criar a chave API');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const deleteApiKey = async (id: string) => {
-    if (!window.confirm('Tem certeza que deseja excluir esta chave API?')) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await axios.delete(`/api/v1/api-keys/${id}`);
-      setKeys(keys.filter(key => key.id !== id));
-      setSuccess('Chave API excluída com sucesso!');
-    } catch (err) {
-      setError('Erro ao excluir a chave API');
+      setError('Erro ao gerar nova chave API');
     } finally {
       setLoading(false);
     }
@@ -78,76 +59,111 @@ const ApiKeys = () => {
     setTimeout(() => setSuccess(null), 3000);
   };
 
+  const deleteKey = async (password: string) => {
+    if (!password) {
+      setDeleteError('Senha é obrigatória');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await api.delete('/key/delete', {
+        data: { password }
+      });
+      setKey(null);
+      setSuccess('Chave API excluída com sucesso');
+      setIsDeleteModalOpen(false);
+      setDeleteError(null);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        setDeleteError('Senha incorreta');
+      } else {
+        setDeleteError('Erro ao excluir a chave API');
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Carregando...</div>;
+  }
+
   return (
     <div className="api-keys-container">
       <div className="page-header">
-        <h1>Gerenciamento de Chaves API</h1>
+        <h1>Chave API</h1>
         <button 
           className="create-key-btn"
-          onClick={() => setIsCreating(true)}
-          disabled={isCreating}
+          onClick={generateNewKey}
+          disabled={loading}
         >
-          <FontAwesomeIcon icon={faPlus} />
-          Nova Chave API
+          <FontAwesomeIcon icon={faKey} />
+          Gerar Nova Chave
         </button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
 
-      {isCreating && (
-        <div className="create-key-form">
-          <input
-            type="text"
-            placeholder="Nome da chave API"
-            value={newKeyName}
-            onChange={(e) => setNewKeyName(e.target.value)}
-          />
-          <div className="form-actions">
-            <button className="cancel-btn" onClick={() => setIsCreating(false)}>
-              Cancelar
-            </button>
-            <button className="confirm-btn" onClick={createApiKey}>
-              Criar Chave
+      {key ? (
+        <div className="key-card">
+          <div className="key-header">
+            <FontAwesomeIcon icon={faKey} className="key-icon" />
+            <h3 className='h3-key-info'>Sua Chave API</h3>
+          </div>
+          <div className="key-content">
+            <div className="key-info">
+              <span>Criada em: {key.createdAt}</span>
+              {key.lastUsedAt && (
+                <span>Último uso: {key.lastUsedAt}</span>
+              )}
+            </div>
+            <div className="key-value">
+              <code>ID: {key.id}</code>
+              <button 
+                className="copy-btn"
+                onClick={() => copyToClipboard(key.id)}
+                title="Copiar chave"
+              >
+                <FontAwesomeIcon icon={faCopy} />
+              </button>
+            </div>
+            <p className='p-info-key'>A Key só pode ser visualizada no momento da geração, depois disso é impossível visualizá-la novamente!</p>
+          </div>
+          <div className="key-actions">
+            <button 
+              className="delete-key-btn"
+              onClick={() => setIsDeleteModalOpen(true)}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+              Excluir Chave
             </button>
           </div>
         </div>
+      ) : (
+        <div className="no-key">
+          <p>Você ainda não possui uma chave API.</p>
+          <button 
+            className="create-key-btn"
+            onClick={generateNewKey}
+            disabled={loading}
+          >
+            Gerar Chave
+          </button>
+        </div>
       )}
 
-      <div className="keys-grid">
-        {keys.map(key => (
-          <div key={key.id} className="key-card">
-            <div className="key-header">
-              <FontAwesomeIcon icon={faKey} className="key-icon" />
-              <h3>{key.name}</h3>
-            </div>
-            <div className="key-content">
-              <div className="key-value">
-                <code>{key.key}</code>
-                <button 
-                  className="copy-btn"
-                  onClick={() => copyToClipboard(key.key)}
-                >
-                  <FontAwesomeIcon icon={faCopy} />
-                </button>
-              </div>
-              <div className="key-info">
-                <span>Criada em: {new Date(key.createdAt).toLocaleDateString()}</span>
-                {key.lastUsed && (
-                  <span>Último uso: {new Date(key.lastUsed).toLocaleDateString()}</span>
-                )}
-              </div>
-            </div>
-            <button 
-              className="delete-btn"
-              onClick={() => deleteApiKey(key.id)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-              Excluir
-            </button>
-          </div>
-        ))}
-      </div>
+      <DeleteKeyModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setDeleteError(null);
+        }}
+        onConfirm={deleteKey}
+        error={deleteError}
+      />
     </div>
   );
 };

@@ -49,6 +49,7 @@
 }
 
 .login-card {
+    margin: auto;
 }
 
 .login-card {
@@ -128,6 +129,7 @@
 }
   
 .form-group input {
+    box-sizing: border-box;
     padding: 0.625rem 0.75rem;
     background-color: var(--background);
     border: 1px solid var(--gray-border);
