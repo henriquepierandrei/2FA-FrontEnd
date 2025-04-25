@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
-import api from '../services/api-route';
-import axios from 'axios';
+import { createContext, useContext, useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import api from '../services/api-route';
 
 interface TokenResponse {
   access_token: string;
@@ -13,161 +12,70 @@ interface TokenResponse {
 interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (response: TokenResponse) => void;
+  login: (tokenResponse: TokenResponse) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const refreshTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const setupRefreshTimer = (expiresIn: number) => {
-    // Clear any existing timeout
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
+  useEffect(() => {
+    const checkAuth = async () => {
+      const accessToken = Cookies.get('accessToken');
+      const refreshToken = Cookies.get('refreshToken');
 
-    // Set up refresh timer to trigger 1 minute before expiration
-    const refreshTime = (expiresIn - 60) * 1000; // Convert to milliseconds
-    
-    refreshTimeoutRef.current = setTimeout(async () => {
-      try {
-        const refreshToken = Cookies.get('refreshToken');
-        if (!refreshToken) throw new Error('No refresh token available');
-
-        const response = await api.post<TokenResponse>('/auth/refresh', {
-          refreshToken
-        });
-
-        // Update tokens with new expiration times
-        login(response.data);
-      } catch (error) {
-        console.error('Auto refresh failed:', error);
-        logout();
+      if (!accessToken || !refreshToken) {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+        return;
       }
-    }, refreshTime);
-  };
+
+      try {
+        // Try to use current token
+        await api.get('/auth/validate');
+        setIsAuthenticated(true);
+      } catch (error) {
+        // Token validation failed, try refresh
+        try {
+          const response = await api.post('/auth/refresh', { refreshToken });
+          const { access_token, refresh_token } = response.data;
+          
+          Cookies.set('accessToken', access_token);
+          Cookies.set('refreshToken', refresh_token);
+          
+          setIsAuthenticated(true);
+        } catch (refreshError) {
+          // Refresh failed, clear tokens
+          Cookies.remove('accessToken');
+          Cookies.remove('refreshToken');
+          setIsAuthenticated(false);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   const login = (tokenResponse: TokenResponse) => {
-    const { 
-      access_token, 
-      refresh_token, 
-      access_token_expires_in,
-      refresh_token_expires_in 
-    } = tokenResponse;
-
-    // Store tokens with proper expiration
-    Cookies.set('accessToken', access_token, {
-      expires: access_token_expires_in / (24 * 60 * 60),
-      secure: true,
-      sameSite: 'strict'
-    });
-
-    Cookies.set('refreshToken', refresh_token, {
-      expires: refresh_token_expires_in / (24 * 60 * 60),
-      secure: true,
-      sameSite: 'strict'
-    });
-
-    // Update axios headers
-    axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+    const { access_token, refresh_token } = tokenResponse;
     
+    Cookies.set('accessToken', access_token);
+    Cookies.set('refreshToken', refresh_token);
+    
+    api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
     setIsAuthenticated(true);
-
-    // Setup refresh timer
-    setupRefreshTimer(access_token_expires_in);
   };
 
-  const logout = useCallback(() => {
+  const logout = () => {
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
     setIsAuthenticated(false);
-    
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
-  }, []);
-
-  useEffect(() => {
-    // Initial auth check
-    const accessToken = Cookies.get('accessToken');
-    if (accessToken) {
-      setIsAuthenticated(true);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-    }
-    setIsLoading(false);
-
-    // Cleanup on unmount
-    return () => {
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  // Add axios request interceptor to include access token
-  const requestInterceptor = axios.interceptors.request.use(
-    (config) => {
-      const accessToken = Cookies.get('accessToken');
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
-
-  // Add axios response interceptor for token refresh
-  const responseInterceptor = axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-
-      if (error.response?.status !== 401 || originalRequest._retry) {
-        return Promise.reject(error);
-      }
-
-      originalRequest._retry = true;
-
-      try {
-        const refreshToken = Cookies.get('refreshToken');
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
-
-        const response = await api.post<TokenResponse>('/auth/refresh', {
-          refreshToken
-        });
-
-        // Update tokens with new expiration times
-        login(response.data);
-
-        // Update the original request authorization
-        originalRequest.headers['Authorization'] = `Bearer ${response.data.access_token}`;
-
-        // Retry the original request with new token
-        return axios(originalRequest);
-
-      } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
-        logout();
-        return Promise.reject(refreshError);
-      }
-    }
-  );
-
-  // Cleanup interceptors on unmount
-  useEffect(() => {
-    return () => {
-      axios.interceptors.request.eject(requestInterceptor);
-      axios.interceptors.response.eject(responseInterceptor);
-    };
-  }, [requestInterceptor, responseInterceptor]);
+  };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>

@@ -9,13 +9,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import './Account.css';
+import api from '../../services/api-route';
 
 interface UserProfile {
-  id: string;
-  name: string;
+  username: string;
   email: string;
-  createdAt: string;
-  is2FAEnabled: boolean;
 }
 
 const Account = () => {
@@ -38,9 +36,13 @@ const Account = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get('/api/v1/account/profile');
+      const response = await api.get('/report/get/account/profile');
       setProfile(response.data);
-      setFormData(prev => ({ ...prev, name: response.data.name }));
+      // Update form data with current username
+      setFormData(prev => ({
+        ...prev,
+        username: response.data.username || ''
+      }));
     } catch (err) {
       setError('Falha ao carregar perfil');
     } finally {
@@ -63,34 +65,34 @@ const Account = () => {
 
     try {
       setLoading(true);
-      await axios.put('/api/v1/account/profile', {
-        name: formData.username,
+      await api.put('/account/profile', {
+        username: formData.username,
         currentPassword: formData.currentPassword,
-        newPassword: formData.newPassword
+        newPassword: formData.newPassword || undefined
       });
 
       setSuccess('Perfil atualizado com sucesso!');
       setIsEditing(false);
+      // Reset password fields
+      setFormData(prev => ({
+        ...prev,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      }));
       fetchProfile();
-    } catch (err) {
-      setError('Erro ao atualizar perfil');
+    } catch (err: any) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Erro ao atualizar perfil');
+      } else {
+        setError('Erro ao atualizar perfil');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const toggle2FA = async () => {
-    try {
-      setLoading(true);
-      await axios.post(`/api/v1/account/2fa/${profile?.is2FAEnabled ? 'disable' : 'enable'}`);
-      fetchProfile();
-      setSuccess(`2FA ${profile?.is2FAEnabled ? 'desativado' : 'ativado'} com sucesso!`);
-    } catch (err) {
-      setError('Erro ao alterar configuração 2FA');
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   if (loading && !profile) {
     return <div className="loading">Carregando...</div>;
@@ -120,7 +122,8 @@ const Account = () => {
                 </label>
                 <input
                   type="text"
-                  name="name"
+                  style={{color: 'gray'}}
+                  name="username"
                   value={formData.username}
                   onChange={handleInputChange}
                   disabled={!isEditing}
@@ -133,6 +136,7 @@ const Account = () => {
                 </label>
                 <input
                   type="email"
+                  style={{color: 'gray'}}
                   value={profile?.email}
                   disabled
                 />
@@ -205,31 +209,6 @@ const Account = () => {
                 )}
               </div>
             </form>
-          </div>
-        </div>
-
-        <div className="security-card">
-          <div className="card-header">
-            <FontAwesomeIcon icon={faShield} className="header-icon" />
-            <h2>Segurança</h2>
-          </div>
-          <div className="card-content">
-            <div className="security-item">
-              <div className="security-info">
-                <h3>Autenticação em Duas Etapas (2FA)</h3>
-                <p>
-                  {profile?.is2FAEnabled 
-                    ? 'A autenticação em duas etapas está ativada.'
-                    : 'Ative a autenticação em duas etapas para maior segurança.'}
-                </p>
-              </div>
-              <button
-                className={`toggle-2fa-btn ${profile?.is2FAEnabled ? 'enabled' : ''}`}
-                onClick={toggle2FA}
-              >
-                {profile?.is2FAEnabled ? 'Desativar' : 'Ativar'}
-              </button>
-            </div>
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faTrash, faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
+import Logo from '../../assets/img/logo.png';
 import api from '../../services/api-route';
 import axios from 'axios';
 import './ApiKeys.css';
@@ -93,7 +94,7 @@ const ApiKeys = () => {
   return (
     <div className="api-keys-container">
       <div className="page-header">
-        <h1>Chave API</h1>
+        <h1 className='div-logo' ><img src={Logo} alt="" width={50}/>Chave API</h1>
         <button 
           className="create-key-btn"
           onClick={generateNewKey}
