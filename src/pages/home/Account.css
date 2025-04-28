@@ -72,7 +72,7 @@
 }
 
 .form-group input:disabled {
-  background: var(--gray-hover);
+  background: var(--background);
   cursor: not-allowed;
 }
 

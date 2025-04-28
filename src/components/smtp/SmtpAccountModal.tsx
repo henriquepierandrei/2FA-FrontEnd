@@ -110,7 +110,8 @@ const SmtpAccountModal: React.FC<SmtpAccountModalProps> = ({
             />
           </div>
 
-          <div className="form-group">
+
+          {account ? null : <div className="form-group">
             <label htmlFor="password">Senha</label>
             <input
               id="password"
@@ -122,7 +123,10 @@ const SmtpAccountModal: React.FC<SmtpAccountModalProps> = ({
               }))}
               required={!account}
             />
-          </div>
+          </div> }
+
+          
+
 
           <div className="form-group">
             <label className="checkbox-label">

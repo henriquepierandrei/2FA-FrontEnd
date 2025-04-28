@@ -146,7 +146,7 @@ const Account = () => {
                   name="username"
                   value={formData.username}
                   onChange={handleInputChange}
-                  disabled={!isEditing}
+                  disabled
                 />
               </div>
               <div className="form-group">

@@ -183,25 +183,7 @@
   color: white;
 }
 
-.error-message,
-.success-message {
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
 
-.error-message {
-  background-color: red;
-  background: var(--white);
-  border: 1px solid #ef4444;
-  color: #ef4444;
-}
-
-.success-message {
-  background:  var(--white);
-  border: 1px solid #22c55e;
-  color: #22c55e;
-}
 
 /* Responsive styles */
 @media (max-width: 768px) {

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPlus, faPencilAlt, faTrash, faSync } from '@fortawesome/free-solid-svg-icons';
 import api from '../../services/api-route';
 import './SmtpAccounts.css';
-import SmtpAccountModal from '../../components/smtp/SmtpAccountModal';
+import SmtpAccountModal from './SmtpAccountModal';
+import axios from 'axios';
 
 interface SmtpAccount {
   id: string;
@@ -13,7 +14,6 @@ interface SmtpAccount {
   password: string;
   smtpAuth: boolean;
   smtpStarttls: boolean;
-  hasAvailable: boolean;
   sentNumber: number;
   lastUsedAt: string;
   quantitySentInInterval: number;
@@ -27,6 +27,7 @@ const SmtpAccounts = () => {
   const [accounts, setAccounts] = useState<SmtpAccount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<SmtpAccount | null>(null);
 
@@ -47,21 +48,70 @@ const SmtpAccounts = () => {
 
   const handleSaveAccount = async (account: Partial<SmtpAccount>) => {
     try {
+      setLoading(true);
+      setError(null);
+
       if (account.id) {
-        await api.put(`/smtp/accounts/${account.id}`, account);
+        // Update existing account
+        await api.put(`/smtp/update?smtpAccountId=${account.id}`, {
+          host: account.host,
+          port: account.port,
+          username: account.username,
+          password: account.password, // Only sent if changed
+          smtpAuth: account.smtpAuth,
+          smtpStarttls: account.smtpStarttls
+        });
+        setSuccess('Conta SMTP atualizada com sucesso!');
       } else {
-        await api.post('/smtp/accounts', account);
+        // Create new account
+        await api.post('/smtp/register', account);
+        setSuccess('Conta SMTP criada com sucesso!');
       }
-      fetchAccounts();
+      
+      // Refresh accounts list
+      await fetchAccounts();
       setIsModalOpen(false);
+      setEditingAccount(null);
     } catch (err) {
-      setError('Falha ao salvar conta SMTP');
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Falha ao salvar conta SMTP');
+        console.error('Error saving SMTP account:', err.response?.data);
+      } else {
+        setError('Erro inesperado ao salvar conta SMTP');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
-    function handleDeleteAccount(id: string): void {
-        throw new Error('Function not implemented.');
+  const handleDeleteAccount = async (id: string) => {
+    if (!window.confirm('Tem certeza que deseja excluir esta conta SMTP?')) {
+      return;
     }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      var response = await api.delete('/smtp/delete', {
+        params: {
+          smtpAccountId: id
+        }
+      });
+
+      setSuccess(response.data.message || 'Conta SMTP excluída com sucesso!');
+      await fetchAccounts(); // Refresh the list
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Falha ao excluir conta SMTP');
+        console.error('Error deleting SMTP account:', err.response?.data);
+      } else {
+        setError('Erro inesperado ao excluir conta SMTP');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="smtp-accounts-container">
@@ -83,6 +133,7 @@ const SmtpAccounts = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
 
       {loading ? (
         <div className="loading">Carregando...</div>
@@ -138,12 +189,7 @@ const SmtpAccounts = () => {
                     {new Date(account.lastUsedAt).toLocaleString('pt-BR')}
                   </strong>
                 </div>
-                <div className="info-row">
-                  <span>Disponível:</span>
-                  <strong className={account.hasAvailable ? 'available' : 'unavailable'}>
-                    {account.hasAvailable ? 'Sim' : 'Não'}
-                  </strong>
-                </div>
+              
               </div>
             </div>
           ))}

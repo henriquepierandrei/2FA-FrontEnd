@@ -49,13 +49,13 @@ const Sidebar = () => {
           <FontAwesomeIcon icon={faEnvelope} />
           <span>SMTP</span>
         </Link>
-        <Link to="/dashboard/reports" className="nav-item">
+        <Link to="/dashboard/template" className="nav-item">
           <FontAwesomeIcon icon={faChartBar} />
-          <span>Relatórios</span>
+          <span>Template</span>
         </Link>
-        <Link to="/dashboard/templates" className="nav-item">
+        <Link to="/dashboard/documentation" className="nav-item">
           <FontAwesomeIcon icon={faFileAlt} />
-          <span>Templates</span>
+          <span>Documentação</span>
         </Link>
         <Link to="/dashboard/api-keys" className="nav-item">
           <FontAwesomeIcon icon={faKey} />

@@ -3,12 +3,12 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { useAuth } from "./contexts/AuthContext";
 import Login from "./pages/auth/Login";
 import Dashboard from "./pages/home/Dashboard";
-import ApiKeys from "./pages/home/ApiKeys";
 import Register from "./pages/auth/Register";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import SmtpAccounts from "./pages/home/SmtpAccounts";
+import SmtpAccounts from "./components/smtp/SmtpAccounts";
+import EmailTemplateBuilder from "./components/email/EmailTemplateBuilder";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -38,6 +38,12 @@ function App() {
         <Route path="/smtp/*" element={
           <PrivateRoute>
             <SmtpAccounts />
+          </PrivateRoute>
+        } />
+
+        <Route path="/template" element={
+          <PrivateRoute>
+            <EmailTemplateBuilder />
           </PrivateRoute>
         } />
 
