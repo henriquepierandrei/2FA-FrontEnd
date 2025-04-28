@@ -16,6 +16,12 @@ interface UserProfile {
   email: string;
 }
 
+interface PasswordUpdate {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const Account = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -36,6 +42,7 @@ const Account = () => {
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
       const response = await api.get('/report/get/account/profile');
       setProfile(response.data);
       // Update form data with current username
@@ -44,7 +51,13 @@ const Account = () => {
         username: response.data.username || ''
       }));
     } catch (err) {
-      setError('Falha ao carregar perfil');
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'Falha ao carregar perfil');
+        console.error('Error fetching profile:', err.response?.data);
+      } else {
+        setError('Falha ao carregar perfil');
+        console.error('Unexpected error:', err);
+      }
     } finally {
       setLoading(false);
     }
@@ -58,20 +71,28 @@ const Account = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-      setError('As senhas não coincidem');
-      return;
+    // Validate passwords in frontend only
+    if (formData.newPassword) {
+      if (formData.newPassword.length < 8) {
+        setError('A nova senha deve ter pelo menos 8 caracteres');
+        return;
+      }
+
+      if (formData.newPassword !== formData.confirmPassword) {
+        setError('As senhas não coincidem');
+        return;
+      }
     }
 
     try {
       setLoading(true);
-      await api.put('/account/profile', {
-        username: formData.username,
-        currentPassword: formData.currentPassword,
-        newPassword: formData.newPassword || undefined
+      // Only send oldPassword and newPassword to backend
+      await api.put('/auth/update/password', {
+        oldPassword: formData.currentPassword,
+        newPassword: formData.newPassword
       });
 
-      setSuccess('Perfil atualizado com sucesso!');
+      setSuccess('Senha atualizada com sucesso!');
       setIsEditing(false);
       // Reset password fields
       setFormData(prev => ({
@@ -80,10 +101,9 @@ const Account = () => {
         newPassword: '',
         confirmPassword: ''
       }));
-      fetchProfile();
-    } catch (err: any) {
+    } catch (err) {
       if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.message || 'Erro ao atualizar perfil');
+        setError(err.response?.data?.message || 'Erro ao atualizar senha');
       } else {
         setError('Erro ao atualizar perfil');
       }
@@ -117,7 +137,7 @@ const Account = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>
-                  <FontAwesomeIcon icon={faUser} />
+                  <FontAwesomeIcon icon={faUser} style={{marginRight: "10px"}}/>
                   Nome do Usuário
                 </label>
                 <input
@@ -131,7 +151,7 @@ const Account = () => {
               </div>
               <div className="form-group">
                 <label>
-                  <FontAwesomeIcon icon={faEnvelope} />
+                  <FontAwesomeIcon icon={faEnvelope} style={{marginRight: "10px"}}/>
                   Email
                 </label>
                 <input
@@ -146,7 +166,7 @@ const Account = () => {
                 <>
                   <div className="form-group">
                     <label>
-                      <FontAwesomeIcon icon={faLock} />
+                      <FontAwesomeIcon icon={faLock} style={{marginRight: "10px"}}/>
                       Senha Atual
                     </label>
                     <input
@@ -158,7 +178,7 @@ const Account = () => {
                   </div>
                   <div className="form-group">
                     <label>
-                      <FontAwesomeIcon icon={faLock} />
+                      <FontAwesomeIcon icon={faLock} style={{marginRight: "10px"}}/>
                       Nova Senha
                     </label>
                     <input
@@ -170,7 +190,7 @@ const Account = () => {
                   </div>
                   <div className="form-group">
                     <label>
-                      <FontAwesomeIcon icon={faLock} />
+                      <FontAwesomeIcon icon={faLock} style={{marginRight: "10px"}}/>
                       Confirmar Nova Senha
                     </label>
                     <input
@@ -202,7 +222,7 @@ const Account = () => {
                       Cancelar
                     </button>
                     <button type="submit" className="save-btn">
-                      <FontAwesomeIcon icon={faSave} />
+                      <FontAwesomeIcon icon={faSave} style={{marginRight: "10px"}}/>
                       Salvar
                     </button>
                   </>

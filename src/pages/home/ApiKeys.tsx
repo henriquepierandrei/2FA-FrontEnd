@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faKey, faTrash, faCopy, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faKey, faCopy } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../../assets/img/logo.png';
 import api from '../../services/api-route';
 import axios from 'axios';
 import './ApiKeys.css';
-import DeleteKeyModal from '../../components/DeleteKeyModal';
+import KeyGenerationModal from '../../components/key/KeyGenerationModal';
 
 interface ApiKey {
   id: string;
@@ -13,13 +13,28 @@ interface ApiKey {
   lastUsedAt: string; // Format: "DD/MM/YYYY HH:mm:ss"
 }
 
+interface KeyGenerationResponse {
+  status: string;
+  uuidInfo: {
+    userOwnerId: string;
+  };
+  keyInfo: {
+    key: string;
+    label: string;
+    active: boolean;
+  };
+  timeInfo: {
+    createdAt: string;
+    availableForNewKeyAt: string;
+  };
+}
+
 const ApiKeys = () => {
   const [key, setKey] = useState<ApiKey | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [generatedKeyData, setGeneratedKeyData] = useState<KeyGenerationResponse | null>(null);
 
   useEffect(() => {
     fetchApiKey();
@@ -29,7 +44,6 @@ const ApiKeys = () => {
     try {
       const response = await api.get('/key/get');
       setKey(response.data);
-      console.log(response.data.createdAt);
     } catch (err) {
       setError('Falha ao carregar a chave API');
     } finally {
@@ -44,11 +58,25 @@ const ApiKeys = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/v1/key/generate');
-      setKey(response.data);
-      setSuccess('Nova chave API gerada com sucesso!');
+      const response = await api.post<KeyGenerationResponse>('/key/generate');
+      setGeneratedKeyData(response.data);
+      // Update the key state with the new key data
+      setKey({
+        id: response.data.keyInfo.key,
+        createdAt: new Date(response.data.timeInfo.createdAt).toLocaleString('pt-BR'),
+        lastUsedAt: ''
+      });
     } catch (err) {
-      setError('Erro ao gerar nova chave API');
+      if (axios.isAxiosError(err)) {
+        // Handle API error response
+        const errorMessage = err.response?.data?.message || 'Erro ao gerar nova chave API';
+        setError(errorMessage);
+        console.error('Error generating key:', err.response?.data);
+      } else {
+        // Handle unexpected errors
+        setError('Erro inesperado ao gerar chave');
+        console.error('Unexpected error:', err);
+      }
     } finally {
       setLoading(false);
     }
@@ -58,33 +86,6 @@ const ApiKeys = () => {
     await navigator.clipboard.writeText(text);
     setSuccess('Chave copiada para a área de transferência!');
     setTimeout(() => setSuccess(null), 3000);
-  };
-
-  const deleteKey = async (password: string) => {
-    if (!password) {
-      setDeleteError('Senha é obrigatória');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await api.delete('/key/delete', {
-        data: { password }
-      });
-      setKey(null);
-      setSuccess('Chave API excluída com sucesso');
-      setIsDeleteModalOpen(false);
-      setDeleteError(null);
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 401) {
-        setDeleteError('Senha incorreta');
-      } else {
-        setDeleteError('Erro ao excluir a chave API');
-      }
-      throw err;
-    } finally {
-      setLoading(false);
-    }
   };
 
   if (loading) {
@@ -133,15 +134,6 @@ const ApiKeys = () => {
             </div>
             <p className='p-info-key'>A Key só pode ser visualizada no momento da geração, depois disso é impossível visualizá-la novamente!</p>
           </div>
-          <div className="key-actions">
-            <button 
-              className="delete-key-btn"
-              onClick={() => setIsDeleteModalOpen(true)}
-            >
-              <FontAwesomeIcon icon={faTrash} />
-              Excluir Chave
-            </button>
-          </div>
         </div>
       ) : (
         <div className="no-key">
@@ -156,15 +148,13 @@ const ApiKeys = () => {
         </div>
       )}
 
-      <DeleteKeyModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => {
-          setIsDeleteModalOpen(false);
-          setDeleteError(null);
-        }}
-        onConfirm={deleteKey}
-        error={deleteError}
-      />
+      {generatedKeyData && (
+        <KeyGenerationModal
+          keyData={generatedKeyData}
+          onClose={() => setGeneratedKeyData(null)}
+          onCopy={copyToClipboard}
+        />
+      )}
     </div>
   );
 };

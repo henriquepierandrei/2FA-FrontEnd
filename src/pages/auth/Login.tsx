@@ -70,6 +70,8 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-card">
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
         <div className="login-header">
           <h2>Acesse sua conta</h2>
           <p>Ou <a href="/register" className="signup-link">cadastre-se gratuitamente</a></p>
@@ -151,9 +153,6 @@ function Login() {
               </button>
             </div>
           </div>
-
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
         </form>
       </div>
     </div>

@@ -8,6 +8,7 @@ import Register from "./pages/auth/Register";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import SmtpAccounts from "./pages/home/SmtpAccounts";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -31,6 +32,12 @@ function App() {
         <Route path="/dashboard/*" element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        } />
+
+        <Route path="/smtp/*" element={
+          <PrivateRoute>
+            <SmtpAccounts />
           </PrivateRoute>
         } />
 
