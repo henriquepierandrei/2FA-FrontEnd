@@ -20,8 +20,8 @@ const ApiDocumentation: React.FC = () => {
 
             <nav className="docs-nav">
                 <ul>
-                    <li><a href="#apiKey">Email</a></li>
-                    <li><a href="#email">ApiKey</a></li>
+                    <li><a href="#email">Email</a></li>
+                    <li><a href="#apiKey">ApiKey</a></li>
 
                 </ul>
             </nav>
