@@ -20,14 +20,14 @@ const ApiDocumentation: React.FC = () => {
 
             <nav className="docs-nav">
                 <ul>
-                    <li><a href="#apiKey">Api Key</a></li>
-                    <li><a href="#email">Email</a></li>
+                    <li><a href="#apiKey">Email</a></li>
+                    <li><a href="#email">ApiKey</a></li>
 
                 </ul>
             </nav>
 
             <main className="docs-content">
-                <section id="apiKey" className="docs-section">
+                <section id="email" className="docs-section">
                     <h2><FontAwesomeIcon icon={faMailBulk} /> Email</h2>
                     <div className="endpoint-card">
                         <div className="endpoint-header">
@@ -134,7 +134,7 @@ const ApiDocumentation: React.FC = () => {
                     </div>
                 </section>
 
-                <section id="email" className="docs-section">
+                <section id="apiKey" className="docs-section">
                     <h2><FontAwesomeIcon icon={faKey} /> API Key</h2>
                     <div className="endpoint-card">
                         <div className="endpoint-header">
