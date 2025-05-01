@@ -11,7 +11,8 @@ import {
   faFileAlt,
   faKey,
   faUser,
-  faSignOutAlt
+  faSignOutAlt,
+  
 } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
 
@@ -49,11 +50,7 @@ const Sidebar = () => {
           <FontAwesomeIcon icon={faEnvelope} />
           <span>SMTP</span>
         </Link>
-        <Link to="/dashboard/template" className="nav-item">
-          <FontAwesomeIcon icon={faChartBar} />
-          <span>Template</span>
-        </Link>
-        <Link to="/dashboard/documentation" className="nav-item">
+        <Link to="/dashboard/docs" className="nav-item">
           <FontAwesomeIcon icon={faFileAlt} />
           <span>Documentação</span>
         </Link>
@@ -65,6 +62,7 @@ const Sidebar = () => {
           <FontAwesomeIcon icon={faUser} />
           <span>Conta</span>
         </Link>
+       
       </nav>
 
       <button className="logout-btn" onClick={handleLogout}>

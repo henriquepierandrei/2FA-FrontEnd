@@ -4,7 +4,8 @@ import './Dashboard.css';
 import React from 'react';
 import Account from './Account';
 import SmtpAccounts from '../../components/smtp/SmtpAccounts';
-import EmailTemplateBuilder from '../../components/email/EmailTemplateBuilder';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import ApiDocumentation from '../../components/documentation/ApiDocumentation';
 
 // Lazy load components
 const ApiKeys = React.lazy(() => import('./ApiKeys'));
@@ -14,12 +15,13 @@ function Dashboard() {
     <div className="dashboard-container">
       <Sidebar />
       <main className="dashboard-content">
-        <React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={LoadingSpinner()}>
           <Routes>
             <Route path="api-keys" element={<ApiKeys />} />
             <Route path="account" element={<Account />} />
             <Route path="smtp" element={<SmtpAccounts />} />
-            <Route path="template" element={<EmailTemplateBuilder />} />
+            <Route path="docs" element={<ApiDocumentation />} />
+
           </Routes>
         </React.Suspense>
       </main>

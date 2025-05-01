@@ -5,6 +5,7 @@ import api from '../../services/api-route';
 import './SmtpAccounts.css';
 import SmtpAccountModal from './SmtpAccountModal';
 import axios from 'axios';
+import LoadingSpinner from '../LoadingSpinner';
 
 interface SmtpAccount {
   id: string;
@@ -136,7 +137,7 @@ const SmtpAccounts = () => {
       {success && <div className="success-message">{success}</div>}
 
       {loading ? (
-        <div className="loading">Carregando...</div>
+        <LoadingSpinner />  
       ) : (
         <div className="accounts-grid">
           {accounts.map(account => (

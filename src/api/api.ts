@@ -50,10 +50,23 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
   const cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: 'http://localhost:8080/api/v1',
     headers: {
-      Authorization: `Bearer ${cookies["accessToken"] || ""}`,
-    },
+      'Accept': '*/*',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+    }
+  });
+
+
+
+  // Adicionar interceptor para lidar com erros CORS
+  api.interceptors.request.use(function (config) {
+    // Importante: não envie o Content-Type para requisições multipart/form-data
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+    return config;
   });
 
   // Interceptor de resposta para lidar com erros 401 (token expirado)
@@ -86,7 +99,7 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
                 secure: process.env.NODE_ENV === "false", // Apenas HTTPS em produção
                 sameSite: "lax", // Política de segurança
               });
-              
+
               setCookie(ctx, "refreshToken", newRefreshToken, {
                 maxAge: 30 * 24 * 60 * 60, // 30 dias
                 path: "/",
@@ -117,7 +130,7 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
             if (!originalConfig) {
               return reject(new Error("Configuração original não encontrada."));
             }
-          
+
             failedRequestQueue.push({
               onSuccess: (token: string) => {
                 if (originalConfig.headers) {
@@ -130,7 +143,7 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
               },
             });
           });
-          
+
         }
       }
       return Promise.reject(error);

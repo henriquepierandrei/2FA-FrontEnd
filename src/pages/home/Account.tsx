@@ -10,6 +10,7 @@ import {
 import axios from 'axios';
 import './Account.css';
 import api from '../../services/api-route';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface UserProfile {
   username: string;
@@ -115,7 +116,7 @@ const Account = () => {
   
 
   if (loading && !profile) {
-    return <div className="loading">Carregando...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

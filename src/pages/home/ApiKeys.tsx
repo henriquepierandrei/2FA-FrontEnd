@@ -6,6 +6,7 @@ import api from '../../services/api-route';
 import axios from 'axios';
 import './ApiKeys.css';
 import KeyGenerationModal from '../../components/key/KeyGenerationModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface ApiKey {
   id: string;
@@ -89,7 +90,7 @@ const ApiKeys = () => {
   };
 
   if (loading) {
-    return <div className="loading">Carregando...</div>;
+    return <LoadingSpinner />;
   }
 
   return (

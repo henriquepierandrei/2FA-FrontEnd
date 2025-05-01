@@ -3,10 +3,11 @@ import Cookies from 'js-cookie';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',
-  headers: {
-    'Content-Type': 'application/json'
-  }
 });
+
+
+
+
 
 // Request interceptor
 api.interceptors.request.use(
@@ -28,7 +29,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const refreshToken = Cookies.get('refreshToken');
         if (!refreshToken) throw new Error('No refresh token');
@@ -38,13 +39,13 @@ api.interceptors.response.use(
         });
 
         const { access_token, refresh_token } = response.data;
-        
+
         Cookies.set('accessToken', access_token);
         Cookies.set('refreshToken', refresh_token);
-        
+
         api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
-        
+
         return api(originalRequest);
       } catch (refreshError) {
         Cookies.remove('accessToken');
@@ -53,7 +54,7 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
-    
+
     return Promise.reject(error);
   }
 );
