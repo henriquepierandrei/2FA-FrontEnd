@@ -9,6 +9,7 @@ import PublicRoute from "./routes/PublicRoute";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import SmtpAccounts from "./components/smtp/SmtpAccounts";
 import ApiDocumentation from './components/documentation/ApiDocumentation';
+import Logs from './components/logs/Logs';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -44,6 +45,12 @@ function App() {
         <Route path="/docs" element={
           <PrivateRoute>
             <ApiDocumentation />
+          </PrivateRoute>
+        } />
+
+        <Route path="/logs" element={
+          <PrivateRoute>
+            <Logs />
           </PrivateRoute>
         } />
 

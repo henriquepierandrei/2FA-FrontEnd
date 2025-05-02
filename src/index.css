@@ -7,12 +7,12 @@
   --primary-light: #85cc55; /* Verde Spring claro */
   --primary-lighter: #a8e07c; /* Verde Spring mais claro */
   --text-dark: #e2e8f0; /* Text claro para fundo escuro */
-  --text-light: #94a3b8; /* Text secundário */
-  --text-lighter: #64748b; /* Text terciário */
-  --background: #232731; /* Fundo escuro */
-  --white: #181e27; /* Cor para cards/elementos */
-  --gray-border: #334155; /* Bordas mais escuras */
-  --gray-hover: #1b1e24; /* Hover state mais escuro */
+  --text-light: #94b89f; /* Text secundário */
+  --text-lighter: #474543; /* Text terciário */
+  --background: #262624; /* Fundo escuro */
+  --white: #1F1E1D; /* Cor para cards/elementos */
+  --gray-border: #2b2e31; /* Bordas mais escuras */
+  --gray-hover: #222121; /* Hover state mais escuro */
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --shadow-strong: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --animation-duration: 200ms;

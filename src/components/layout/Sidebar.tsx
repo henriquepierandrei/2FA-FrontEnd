@@ -12,6 +12,7 @@ import {
   faKey,
   faUser,
   faSignOutAlt,
+  faBook,
   
 } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
@@ -57,6 +58,10 @@ const Sidebar = () => {
         <Link to="/dashboard/api-keys" className="nav-item">
           <FontAwesomeIcon icon={faKey} />
           <span>API Keys</span>
+        </Link>
+        <Link to="/dashboard/logs" className="nav-item">
+          <FontAwesomeIcon icon={faBook} />
+          <span>Logs</span>
         </Link>
         <Link to="/dashboard/account" className="nav-item">
           <FontAwesomeIcon icon={faUser} />
