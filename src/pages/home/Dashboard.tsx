@@ -7,6 +7,7 @@ import SmtpAccounts from '../../components/smtp/SmtpAccounts';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ApiDocumentation from '../../components/documentation/ApiDocumentation';
 import Logs from '../../components/logs/Logs';
+import Home from './Home';
 
 // Lazy load components
 const ApiKeys = React.lazy(() => import('./ApiKeys'));
@@ -23,10 +24,11 @@ function Dashboard() {
             <Route path="smtp" element={<SmtpAccounts />} />
             <Route path="docs" element={<ApiDocumentation />} />
             <Route path="logs" element={<Logs />} />
-
+            <Route path="" element={<Home />} />
           </Routes>
         </React.Suspense>
       </main>
+      
     </div>
   );
 }

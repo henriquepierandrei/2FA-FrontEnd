@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faKey,
@@ -6,11 +6,56 @@ import {
     faServer,
     faCog,
     faShield,
-    faMailBulk
+    faMailBulk,
+    faCopy,
+    faCheck
 } from '@fortawesome/free-solid-svg-icons';
 import './ApiDocumentation.css';
 
+interface CodeBlockProps {
+    code: string;
+    language: string;
+}
+
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
+   
+
+    return (
+        <div className="code-block-wrapper">
+            <pre className="code-block">
+                <code className={`language-${language}`}>
+                    {code}
+                </code>
+            </pre>
+        </div>
+    );
+};
+
 const ApiDocumentation: React.FC = () => {
+    const emailResponse = `{
+  "status": "OK",
+  "emailInfo": {
+    "name": "John Doe",
+    "to": "john.doe@example.com",
+    "from": "no-reply@example.com",
+    "hasLink": true,
+    "link": "https://example.com/recuperar"
+  },
+  "verification": {
+    "code": "123456",
+    "expireAtInMinutes": 15
+  },
+  "emailLog": {
+    "mailSent": true,
+    "hasTemplate": false,
+    "secondsToSend": "2"
+  },
+  "timestamps": {
+    "codeSentAt": "2025-05-01T12:00:00Z",
+    "codeExpireAt": "2025-05-01T12:15:00Z"
+  }
+}`;
+
     return (
         <div className="api-docs-container">
             <header className="docs-header">
@@ -37,10 +82,11 @@ const ApiDocumentation: React.FC = () => {
                         <h3>Enviar Email sem Template</h3>
                         <div className="endpoint-content">
                             <h4>Header</h4>
-                            <pre>Authorization: ApiKey key </pre>
+                            <CodeBlock code="Authorization: ApiKey key" language="bash" />
+                            
                             <h4>Corpo da Requisição</h4>
-                            <pre>{`Body | form-data:
-
+                            <CodeBlock 
+                                code={`{
   "name": "Template de Boas-Vindas",
   "to": "example@example.com",
   "subject": "Bem-vindo ao nosso serviço",
@@ -50,34 +96,12 @@ const ApiDocumentation: React.FC = () => {
   "codeType": "ALPHANUMERIC",
   "hasLink": true,
   "link": "https://exemplo.com/recuperar"
-`}</pre>
+}`} 
+                                language="json" 
+                            />
 
                             <h4>Resposta</h4>
-                            <pre>{`{
-  "status": "OK",
-  "emailInfo": {
-    "name": "John Doe",
-    "to": "john.doe@example.com",
-    "from": "no-reply@example.com",
-    "hasLink": true,
-    "link": "https://example.com/recuperar"
-  },
-  "verification": {
-    "code": "123456",
-    "expireAtInMinutes": 15
-  },
-  "emailLog": {
-    "mailSent": true,
-    "hasTemplate": false,
-    "secondsToSend": "2"
-  },
-  "timestamps": {
-    "codeSentAt": "2025-05-01T12:00:00Z",
-    "codeExpireAt": "2025-05-01T12:15:00Z"
-  }
-}`}</pre>
-
-
+                            <CodeBlock code={emailResponse} language="json" />
                         </div>
                     </div>
 
@@ -89,10 +113,10 @@ const ApiDocumentation: React.FC = () => {
                         <h3>Enviar Email com Template</h3>
                         <div className="endpoint-content">
                             <h4>Header</h4>
-                            <pre>Authorization: ApiKey key </pre>
+                            <CodeBlock code="Authorization: ApiKey key" language="bash" />
                             <h4>Corpo da Requisição</h4>
-                            <pre>{`Body | form-data:
-
+                            <CodeBlock 
+                                code={`{
   "name": "Template de Boas-Vindas",
   "to": "example@example.com",
   "subject": "Bem-vindo ao nosso serviço",
@@ -102,34 +126,12 @@ const ApiDocumentation: React.FC = () => {
   "codeType": "ALPHANUMERIC",
   "hasLink": true,
   "link": "https://exemplo.com/recuperar"
-`}</pre>
+}`} 
+                                language="json" 
+                            />
 
                             <h4>Resposta</h4>
-                            <pre>{`{
-  "status": "OK",
-  "emailInfo": {
-    "name": "John Doe",
-    "to": "john.doe@example.com",
-    "from": "no-reply@example.com",
-    "hasLink": true,
-    "link": "https://example.com/recuperar"
-  },
-  "verification": {
-    "code": "123456",
-    "expireAtInMinutes": 15
-  },
-  "emailLog": {
-    "mailSent": true,
-    "hasTemplate": true,
-    "secondsToSend": "2"
-  },
-  "timestamps": {
-    "codeSentAt": "2025-05-01T12:00:00Z",
-    "codeExpireAt": "2025-05-01T12:15:00Z"
-  }
-}`}</pre>
-
-
+                            <CodeBlock code={emailResponse} language="json" />
                         </div>
                     </div>
                 </section>
@@ -144,9 +146,10 @@ const ApiDocumentation: React.FC = () => {
                         <h3>Gerar Chave da API</h3>
                         <div className="endpoint-content">
                             <h4>Corpo da Requisição</h4>
-                            <pre>Bearer Jwt-Token | Authenticated</pre>
+                            <CodeBlock code="Bearer Jwt-Token | Authenticated" language="bash" />
                             <h4>Resposta</h4>
-                            <pre>{`{
+                            <CodeBlock 
+                                code={`{
   "status": "OK",
   "uuidInfo": {
     "userOwnerId": "550e8400-e29b-41d4-a716-446655440000"
@@ -159,8 +162,9 @@ const ApiDocumentation: React.FC = () => {
     "createdAt": "2025-05-01T12:00:00Z",
     "availableForNewKeyAt": "2025-06-01T12:00:00Z"
   }
-}`}</pre>
-
+}`} 
+                                language="json" 
+                            />
                         </div>
                     </div>
                 </section>

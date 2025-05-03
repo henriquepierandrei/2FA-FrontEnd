@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api-route';
+import { api } from '../../api/api';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import './Login.css';
+import axios from 'axios';
 
 interface TokenResponse {
   access_token: string;
@@ -36,23 +37,51 @@ function Login() {
     setError(null);
 
     try {
-      const response = await api.post<TokenResponse>(
-        "/auth/login",
-        { email, password }
-      );
+      const response = await axios.post<TokenResponse>("http://localhost:8080/api/v1/auth/login", {
+        email,
+        password
+      });
 
-      // Passar a resposta completa para o login do contexto
-      login(response.data);
+      const { 
+        access_token, 
+        refresh_token, 
+        access_token_expires_in, 
+        refresh_token_expires_in 
+      } = response.data;
 
-      // Salvar email em cookie se "lembrar-me" estiver marcado
+      // Calculate expiration dates
+      const accessTokenExpiry = new Date(Date.now() + access_token_expires_in * 1000);
+      const refreshTokenExpiry = new Date(Date.now() + refresh_token_expires_in * 1000);
+
+      // Set cookies with proper expiration
+      Cookies.set('accessToken', access_token, {
+        expires: accessTokenExpiry,
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      Cookies.set('refreshToken', refresh_token, {
+        expires: refreshTokenExpiry,
+        secure: true,
+        sameSite: 'strict'
+      });
+
+      // Save email if remember me is checked
       if (rememberMe) {
-        Cookies.set('rememberedEmail', email, { expires: 30 });
+        Cookies.set('rememberedEmail', email, { 
+          expires: 30,
+          secure: true,
+          sameSite: 'strict'
+        });
       } else {
         Cookies.remove('rememberedEmail');
       }
 
+      // Update auth context
+      login(response.data);
+
       setSuccess("Login bem sucedido!");
-      navigate("/dashboard");
+      navigate("/smtp"); // Redirect to SMTP page instead of dashboard
 
     } catch (err: any) {
       console.error("Erro no login:", err);

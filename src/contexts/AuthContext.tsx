@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
-import api from '../services/api-route';
+import { api } from '../api/api';
 
 interface TokenResponse {
   access_token: string;

@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import './Account.css';
-import api from '../../services/api-route';
+import { api } from '../../api/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface UserProfile {

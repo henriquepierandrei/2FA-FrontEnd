@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faKey, faCopy } from '@fortawesome/free-solid-svg-icons';
 import Logo from '../../assets/img/logo.png';
-import api from '../../services/api-route';
+import { api } from '../../api/api';
 import axios from 'axios';
 import './ApiKeys.css';
 import KeyGenerationModal from '../../components/key/KeyGenerationModal';

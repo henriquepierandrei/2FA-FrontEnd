@@ -13,7 +13,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard/smtp" replace />;
   }
 
   return <>{children}</>;

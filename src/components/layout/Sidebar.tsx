@@ -13,6 +13,7 @@ import {
   faUser,
   faSignOutAlt,
   faBook,
+  faHouse,
   
 } from '@fortawesome/free-solid-svg-icons';
 import './Sidebar.css';
@@ -47,6 +48,10 @@ const Sidebar = () => {
       </div>
 
       <nav className="sidebar-nav">
+      <Link to="/dashboard" className="nav-item">
+          <FontAwesomeIcon icon={faHouse} />
+          <span>Home</span>
+        </Link>
         <Link to="/dashboard/smtp" className="nav-item">
           <FontAwesomeIcon icon={faEnvelope} />
           <span>SMTP</span>

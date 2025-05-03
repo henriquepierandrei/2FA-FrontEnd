@@ -27,6 +27,19 @@
     border: 1px solid var(--gray-border);
 }
 
+.code-block-wrapper {
+    margin: 1rem 0;
+}
+
+.code-block {
+    background: var(--white);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 0;
+    overflow-x: auto;
+}
+
+
 .docs-nav ul {
     display: flex;
     gap: 1rem;
