@@ -1,6 +1,6 @@
-import React, { useState, useEffect, use } from 'react';
+import { useState, useEffect} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEnvelope, faPlus, faPencilAlt, faTrash, faSync } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faPlus, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { api } from '../../api/api';
 import './SmtpAccounts.css';
 import SmtpAccountModal from './SmtpAccountModal';
