@@ -24,15 +24,11 @@ export interface SortInfo {
 export interface LogsResponse {
     logsDtoPageable: {
         content: LogEntry[];
-        pageable: PageInfo;
         totalPages: number;
-        totalElements: number;
         last: boolean;
-        first: boolean;
+        totalElements: number;
         size: number;
         number: number;
-        sort: SortInfo;
         numberOfElements: number;
-        empty: boolean;
     };
 }
