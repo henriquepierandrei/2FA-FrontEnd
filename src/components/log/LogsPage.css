@@ -1,0 +1,126 @@
+.logs-container {
+    padding: 0.5rem;
+    min-width: 95%;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 0.875rem;
+    background: var(--background);
+}
+
+.logs-header {
+    text-align: left;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: var(--white);
+    border-radius: 0.25rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.logs-header h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: var(--primary-light);
+}
+
+.logs-table-container {
+    background: var(--white);
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+
+.logs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 2px;
+    font-size: 0.8125rem;
+    color: var(--text-dark);
+}
+
+.logs-table th,
+.logs-table td {
+    padding: 0.5rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.logs-table th {
+    background: var(--background);
+    color: var(--primary-lighter);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.logs-table tr {
+    background: var(--white);
+    transition: background var(--animation-duration) ease;
+}
+
+.logs-table tr:hover {
+    background: var(--gray-hover);
+}
+
+.logs-table td {
+    border-bottom: 1px solid var(--gray-border);
+    color: var(--text-light);
+}
+
+.logs-pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+}
+
+.pagination-button {
+    padding: 0.25rem 0.5rem;
+    background: var(--white);
+    color: var(--text-light);
+    border: 1px solid var(--gray-border);
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-family: 'Cascadia Code', monospace;
+    cursor: pointer;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: var(--primary-dark);
+    color: var(--text-dark);
+    border-color: var(--primary-color);
+}
+
+.page-info {
+    color: var(--text-light);
+    font-size: 0.75rem;
+}
+
+.logs-loading {
+    padding: 1rem;
+    text-align: center;
+    color: var(--primary-light);
+    font-size: 0.875rem;
+    background: var(--white);
+    border-radius: 0.25rem;
+}
+
+.logs-error {
+    color: #ef4444;
+    text-align: left;
+    padding: 0.5rem;
+    background: var(--white);
+    border-radius: 0.25rem;
+    border-left: 4px solid #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}

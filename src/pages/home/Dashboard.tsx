@@ -6,7 +6,7 @@ import Account from './Account';
 import SmtpAccounts from '../../components/smtp/SmtpAccounts';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ApiDocumentation from '../../components/documentation/ApiDocumentation';
-import Logs from '../../components/logs/Logs';
+import Logs from '../../components/log/LogsPage';
 import Home from './Home';
 
 // Lazy load components

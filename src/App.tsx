@@ -9,7 +9,7 @@ import PublicRoute from "./routes/PublicRoute";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import SmtpAccounts from "./components/smtp/SmtpAccounts";
 import ApiDocumentation from './components/documentation/ApiDocumentation';
-import Logs from './components/logs/Logs';
+import Logs from './components/log/LogsPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
