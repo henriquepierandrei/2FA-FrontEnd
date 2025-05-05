@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiWithKey = axios.create({
-    baseURL: 'http://localhost:8080/api/v1',
+    baseURL: 'https://twofaspring-latest.onrender.com/api/v1',
     headers: {
         'Accept': 'application/json, text/plain, */*',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'

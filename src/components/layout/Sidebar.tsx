@@ -7,7 +7,6 @@ import {
   faChevronLeft, 
   faChevronRight,
   faEnvelope,
-  faChartBar,
   faFileAlt,
   faKey,
   faUser,

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../../api/api';
 import Cookies from 'js-cookie';
 import { useAuth } from '../../contexts/AuthContext';
 import './Login.css';
@@ -37,7 +36,7 @@ function Login() {
     setError(null);
 
     try {
-      const response = await axios.post<TokenResponse>("http://localhost:8080/api/v1/auth/login", {
+      const response = await axios.post<TokenResponse>("https://twofaspring-latest.onrender.com/api/v1/auth/login", {
         email,
         password
       });

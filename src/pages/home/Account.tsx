@@ -5,7 +5,6 @@ import {
   faEnvelope, 
   faLock, 
   faSave,
-  faShield
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import './Account.css';
@@ -15,12 +14,6 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 interface UserProfile {
   username: string;
   email: string;
-}
-
-interface PasswordUpdate {
-  oldPassword: string;
-  newPassword: string;
-  confirmPassword: string;
 }
 
 const Account = () => {

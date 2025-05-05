@@ -1,6 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faKey, faCopy } from '@fortawesome/free-solid-svg-icons';
 import './KeyDetailsModal.css';
 
 interface KeyGenerationResponse {
@@ -28,9 +26,7 @@ interface KeyDetailsModalProps {
 
 const KeyDetailsModal: React.FC<KeyDetailsModalProps> = ({ 
   isOpen, 
-  onClose, 
-  keyData,
-  onCopy 
+  keyData
 }) => {
   if (!isOpen || !keyData) {
     return null;

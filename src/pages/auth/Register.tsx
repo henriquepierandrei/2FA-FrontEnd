@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './Register.css'; // Importando o arquivo CSS
-import axios from 'axios'; // Certifique-se de ter o axios importado
 
 function Register() {
   // Estado inicial do formulário com apenas os campos necessários
@@ -46,11 +45,11 @@ function Register() {
 
     try {
         // Faz a requisição para a API de registro
-        const response = await axios.post("http://localhost:8080/api/v1/auth/register", {
-            email,
-            username,
-            password
-        });
+        // const response = await axios.post("http://localhost:8080/api/v1/auth/register", {
+        //     email,
+        //     username,
+        //     password
+        // });
 
         setSuccess('Registro realizado com sucesso!');
         setError(null);
@@ -64,21 +63,21 @@ function Register() {
   };
 
   // Tipando o parâmetro 'e'
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("As senhas não coincidem!");
-      return;
-    }
+  //   if (formData.password !== formData.confirmPassword) {
+  //     alert("As senhas não coincidem!");
+  //     return;
+  //   }
     
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      console.log('Registro com:', formData);
-      // Implementar lógica real
-    }, 1500);
-  };
+  //   setIsLoading(true);
+  //   setTimeout(() => {
+  //     setIsLoading(false);
+  //     console.log('Registro com:', formData);
+  //     // Implementar lógica real
+  //   }, 1500);
+  // };
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
