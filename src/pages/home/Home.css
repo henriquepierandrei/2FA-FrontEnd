@@ -5,7 +5,7 @@
 }
 
 .hero-section {
-    padding: 4rem 2rem;
+    padding: 1rem 0rem 1rem 0rem;
     background: linear-gradient(135deg, var(--white) 0%, var(--background) 100%);
     border-bottom: 1px solid var(--gray-border);
 }
@@ -26,7 +26,7 @@
 .hero-subtitle {
     font-size: 1.25rem;
     color: var(--text-light);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .hero-stats {
@@ -72,6 +72,99 @@
     align-items: center;
     text-align: center;
     transition: transform var(--animation-duration) ease;
+}
+
+.template-preview-section {
+    padding: 4rem 0;
+    background: var(--background);
+    margin: 4rem 0;
+}
+
+.template-preview-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.template-text {
+    padding-right: 2rem;
+}
+
+.template-text h2 {
+    font-size: 2.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.template-text p {
+    font-size: 1.2rem;
+    color: var(--text);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.template-features {
+    list-style: none;
+    padding: 0;
+}
+
+.template-features li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.feature-check {
+    color: var(--primary-color);
+    margin-right: 1rem;
+    font-size: 1.2rem;
+}
+
+.template-image {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+    width: 80%;
+    box-shadow: var(--shadow);
+}
+
+.template-screenshot {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.template-image:hover .template-screenshot {
+    transform: scale(1.02);
+    cursor: pointer;
+}
+@media (max-width: 968px) {
+    .template-preview-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .template-text {
+        padding-right: 0;
+        text-align: center;
+    }
+
+    .template-text h2 {
+        text-align: center;
+    }
+
+    .template-features li {
+        justify-content: center;
+    }
 }
 
 .feature-card:hover {
