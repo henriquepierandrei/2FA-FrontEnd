@@ -18,7 +18,8 @@ let failedRequestQueue: Array<{
 
 export function setupAPIClient(ctx: any = undefined): AxiosInstance {
   const api = axios.create({
-    baseURL: 'https://twofaspring-latest.onrender.com/api/v1',
+    // baseURL: 'https://twofaspring-latest.onrender.com/api/v1',
+    baseURL: 'http://localhost:8080/api/v1',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
