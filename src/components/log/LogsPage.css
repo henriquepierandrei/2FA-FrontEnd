@@ -3,6 +3,7 @@
     min-width: 95%;
     max-width: 1000px;
     margin: 0 auto;
+    height: 100vh;
     font-family: 'Cascadia Code', monospace;
     font-size: 0.875rem;
     background: var(--background);

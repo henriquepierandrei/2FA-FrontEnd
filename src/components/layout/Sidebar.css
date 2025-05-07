@@ -29,7 +29,7 @@
 .mobile-sidebar {
   position: fixed;
   top: 0;
-  right: -280px;
+  right: -315px;
   width: 280px;
   height: 100vh;
   background: var(--background);
@@ -60,7 +60,7 @@
 
   .burger-menu {
     display: flex;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     align-items: center;
     justify-content: center;
   }
