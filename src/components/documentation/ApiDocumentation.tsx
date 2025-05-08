@@ -2,8 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import logo from '../../assets/img/logo.png';
 import {
     faA,
-    faArrowLeft,
-    faBook,
     faCode,
     faKey,
     faMailBulk,
