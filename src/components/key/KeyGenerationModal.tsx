@@ -51,9 +51,9 @@ const KeyGenerationModal: React.FC<KeyGenerationModalProps> = ({ keyData, onClos
           <div className="info-section">
             <h3>Sua Nova Chave</h3>
             <div className="key-value">
-              <code>{keyData.keyInfo.key}</code>
+              <code>ApiKey {keyData.keyInfo.key}</code>
               <button 
-                onClick={() => onCopy(keyData.keyInfo.key)}
+                onClick={() => onCopy("ApiKey" + keyData.keyInfo.key)}
                 className="copy-button"
                 title="Copiar chave"
               >
