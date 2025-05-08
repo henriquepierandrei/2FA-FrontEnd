@@ -330,7 +330,6 @@ Clique no link abaixo para continuar: {{link}}`
 
 
 
-                {/* ... outras seções ... */}
             </main>
         </div>
     );
