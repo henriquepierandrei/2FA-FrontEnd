@@ -10,68 +10,69 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import SmtpAccounts from "./components/smtp/SmtpAccounts";
 import ApiDocumentation from './components/documentation/ApiDocumentation';
 import Logs from './components/log/LogsPage';
+import Home from "./pages/home/Home";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
-  return (
-    <AuthProvider>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        } />
-        <Route path="/register" element={
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
-        } />
-
-        {/* Protected Routes */}
-        <Route path="/dashboard/*" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-
-        <Route path="/smtp/*" element={
-          <PrivateRoute>
-            <SmtpAccounts />
-          </PrivateRoute>
-        } />
-
-        <Route path="/docs" element={
-          <PrivateRoute>
-            <ApiDocumentation />
-          </PrivateRoute>
-        } />
-
-        <Route path="/logs" element={
-          <PrivateRoute>
-            <Logs />
-          </PrivateRoute>
-        } />
-
-        {/* Default Route */}
-        <Route path="*" element={
-          isAuthenticated ? (
-            <Navigate to="/dashboard" replace />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        } />
-      </Routes>
-    </AuthProvider>
-  );
-
-
   // return (
-  //   <div>
-  //     <ApiDocumentation />
-  //   </div>
-  // )
+  //   <AuthProvider>
+  //     <Routes>
+  //       {/* Public Routes */}
+  //       <Route path="/login" element={
+  //         <PublicRoute>
+  //           <Login />
+  //         </PublicRoute>
+  //       } />
+  //       <Route path="/register" element={
+  //         <PublicRoute>
+  //           <Register />
+  //         </PublicRoute>
+  //       } />
+
+  //       {/* Protected Routes */}
+  //       <Route path="/dashboard/*" element={
+  //         <PrivateRoute>
+  //           <Dashboard />
+  //         </PrivateRoute>
+  //       } />
+
+  //       <Route path="/smtp/*" element={
+  //         <PrivateRoute>
+  //           <SmtpAccounts />
+  //         </PrivateRoute>
+  //       } />
+
+  //       <Route path="/docs" element={
+  //         <PrivateRoute>
+  //           <ApiDocumentation />
+  //         </PrivateRoute>
+  //       } />
+
+  //       <Route path="/logs" element={
+  //         <PrivateRoute>
+  //           <Logs />
+  //         </PrivateRoute>
+  //       } />
+
+  //       {/* Default Route */}
+  //       <Route path="*" element={
+  //         isAuthenticated ? (
+  //           <Navigate to="/dashboard" replace />
+  //         ) : (
+  //           <Navigate to="/login" replace />
+  //         )
+  //       } />
+  //     </Routes>
+  //   </AuthProvider>
+  // );
+
+
+  return (
+    <div>
+      <Logs />
+    </div>
+  )
   
 }
 

@@ -327,10 +327,6 @@ Clique no link abaixo para continuar: {{link}}`
                         </div>
                     </div>
                 </section>
-
-
-
-                {/* ... outras seções ... */}
             </main>
         </div>
     );
