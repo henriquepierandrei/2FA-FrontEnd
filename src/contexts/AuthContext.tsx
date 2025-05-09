@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { api } from '../api/api';
+import { apiRefreshToken } from '../api/apiRefreshToken';
 
 interface TokenResponse {
   access_token: string;
@@ -48,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       console.log('Refreshing token...');
-      const response = await api.post<TokenResponse>('/auth/refresh', {
+      const response = await apiRefreshToken.post<TokenResponse>('/auth/refresh', {
         refreshToken
       });
 
