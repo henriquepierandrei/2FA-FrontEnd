@@ -112,6 +112,9 @@
     color: var(--primary-light);
     font-size: 0.875rem;
     background: var(--white);
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999999;
     border-radius: 0.25rem;
 }
 
