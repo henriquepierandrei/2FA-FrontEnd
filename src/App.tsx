@@ -70,7 +70,7 @@ function App() {
 
   return (
     <div>
-      <Logs />
+      <ApiDocumentation />
     </div>
   )
   
