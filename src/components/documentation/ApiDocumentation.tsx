@@ -234,7 +234,7 @@ Clique no link abaixo para continuar: {{link}}`
                     <div className="endpoint-card">
                         <div className="endpoint-header">
                             <span className="method post">POST</span>
-                            <code>/api/v1/email/send</code>
+                            <code>https://twofaspring-latest.onrender.com/api/v1/email/send</code>
                         </div>
                         <h3>Enviar Email sem Template</h3>
                         <div className="endpoint-content">
@@ -268,7 +268,7 @@ Clique no link abaixo para continuar: {{link}}`
                     <div className="endpoint-card">
                         <div className="endpoint-header">
                             <span className="method post">POST</span>
-                            <code>/api/v1/email/send/template</code>
+                            <code>https://twofaspring-latest.onrender.com/api/v1/email/send/template</code>
                         </div>
                         <h3>Enviar Email com Template</h3>
                         <div className="endpoint-content">
@@ -303,7 +303,7 @@ Clique no link abaixo para continuar: {{link}}`
                     <div className="endpoint-card">
                         <div className="endpoint-header">
                             <span className="method post">POST</span>
-                            <code>/api/v1/key/generate</code>
+                            <code>https://twofaspring-latest.onrender.com/api/v1/key/generate</code>
                         </div>
                         <h3>Gerar Chave da API</h3>
                         <div className="endpoint-content">
