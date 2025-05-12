@@ -176,10 +176,10 @@ const ApiDocumentation: React.FC = () => {
                         ))}
                     </div>
                 </section>
-                
+
                 <section id="rules" className="docs-section">
                     <h2><FontAwesomeIcon icon={faCircleInfo} /> Regras de Uso</h2>
-                    
+
                     {rules.map((ruleGroup) => (
                         <div key={ruleGroup.type} className="rules-card">
                             <h3>{ruleGroup.title}</h3>
@@ -223,7 +223,7 @@ Seu código de verificação é:
 Este código expira em {{expireAtInMinutes}} minutos.
 
 Clique no link abaixo para continuar: {{link}}`
-}
+                            }
                             language="html"
                         />
                     </div>
@@ -242,10 +242,11 @@ Clique no link abaixo para continuar: {{link}}`
                             <CodeBlock code="Authorization: ApiKey key" language="bash" />
 
                             <h4>Corpo da Requisição</h4>
-                            
-                            
+
+
                             <CodeBlock
-                                code={`{
+                                code={`form-data: 
+                                    
   "name": "Template de Boas-Vindas",
   "to": "example@example.com",
   "subject": "Bem-vindo ao nosso serviço",
@@ -255,10 +256,10 @@ Clique no link abaixo para continuar: {{link}}`
   "codeType": "ALPHANUMERIC",
   "hasLink": true,
   "link": "https://exemplo.com/recuperar"
-}`}
+`}
                                 language="json"
                             />
-
+                            <p style={{ color: "gray", fontSize: "0.8rem" }}>Observação: Envie a Requisição em (form-data), caso contrário ocorrerá um erro. </p>
                             <h4>Resposta</h4>
                             <CodeBlock code={emailResponse} language="json" />
                         </div>
@@ -275,7 +276,8 @@ Clique no link abaixo para continuar: {{link}}`
                             <CodeBlock code="Authorization: ApiKey key" language="bash" />
                             <h4>Corpo da Requisição</h4>
                             <CodeBlock
-                                code={`{
+                                code={`form-data: 
+                                    
   "name": "Template de Boas-Vindas",
   "to": "example@example.com",
   "subject": "Bem-vindo ao nosso serviço",
@@ -288,6 +290,7 @@ Clique no link abaixo para continuar: {{link}}`
 }`}
                                 language="json"
                             />
+                            <p style={{ color: "gray", fontSize: "0.8rem" }}>Observação: Envie a Requisição em (form-data), caso contrário ocorrerá um erro. </p>
 
                             <h4>Resposta</h4>
                             <CodeBlock code={emailResponse} language="json" />
@@ -327,9 +330,6 @@ Clique no link abaixo para continuar: {{link}}`
                         </div>
                     </div>
                 </section>
-
-
-
             </main>
         </div>
     );
