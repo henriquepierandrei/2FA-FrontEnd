@@ -1,26 +1,38 @@
+/* Layout containers */
 .smtp-accounts-container {
-  padding: 2rem;
-  height: 100vh;
-  max-width: 100%;
-  margin: 0 auto;
+  padding: 1.5rem;
+  min-height: 100vh;
+  width: 100%;
 }
 
+/* Header styling */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .header-icon {
-  margin-right: 0.5rem;
   color: var(--primary-color);
 }
 
+/* Button styling */
 .add-account-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background: var(--primary-color);
@@ -29,25 +41,30 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color var(--animation-duration);
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 .add-account-btn:hover {
   background: var(--primary-dark);
 }
 
-.accounts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+/* SMTP Account Cards */
+.accounts-container {
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
 .account-card {
-  background: var(--white);
-  width: max-content;
+  background: var(--card-dark);
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
   transition: box-shadow var(--animation-duration);
+  width: 100%;
+  max-width: 400px;
+  flex: 1 1 300px;
 }
 
 .account-card:hover {
@@ -61,12 +78,18 @@
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--gray-border);
-  color: var(--text-dark);
+}
+
+.account-email {
+  font-weight: 600;
+  word-break: break-all;
+  padding-right: 1rem;
 }
 
 .card-actions {
   display: flex;
   gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .icon-btn {
@@ -86,15 +109,20 @@
 
 .icon-btn.delete:hover {
   color: #ef4444;
-  /* Red color for delete */
   background: var(--gray-hover);
+}
+
+/* Info rows */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
   padding: 0.5rem;
   border-radius: 4px;
   transition: background-color var(--animation-duration);
@@ -104,77 +132,158 @@
   background: var(--gray-hover);
 }
 
-.info-row span {
+.info-label {
   color: var(--text-light);
+  margin-right: 1rem;
 }
 
-.info-row strong {
+.info-value {
+  color: var(--text-dark);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Sidebar styles */
+.sidebar {
+  background-color: var(--background-dark);
+  height: 100vh;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 1.5rem 1rem;
+}
+
+.sidebar-menu {
+  margin-top: 2rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-light);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color var(--animation-duration);
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+  background-color: var(--gray-hover);
   color: var(--text-dark);
 }
 
-.available {
-  color: var(--primary-color) !important;
+/* Main content area */
+.main-content {
+  margin-left: 240px;
+  padding: 2rem;
 }
 
-.unavailable {
-  color: #ef4444 !important;
-  /* Red color for unavailable */
+/* Mobile sidebar toggle */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
-/* Responsive Breakpoints */
+/* Status indicators */
+.status-positive {
+  color: var(--primary-color);
+}
+
+.status-negative {
+  color: #ef4444;
+}
+
+/* Responsive breakpoints */
 @media (max-width: 1024px) {
-  .smtp-accounts-container {
-    padding: 1.5rem;
-  }
-
-  .accounts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .accounts-container {
     gap: 1rem;
+  }
+  
+  .account-card {
+    flex: 1 1 280px;
   }
 }
 
 @media (max-width: 768px) {
-  .smtp-accounts-container {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .main-content {
+    margin-left: 0;
     padding: 1rem;
   }
+  
+  .mobile-menu-toggle {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 101;
+  }
+  
+  .page-header {
+    margin-top: 3rem;
+  }
+}
 
+@media (max-width: 640px) {
   .page-header {
     flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    align-items: flex-start;
   }
-
-  .accounts-grid {
-    margin: auto;
+  
+  .add-account-btn {
     width: 100%;
-    display: block;
-    grid-template-columns: 1fr;
   }
-
+  
+  .account-card {
+    max-width: none;
+  }
+  
   .card-header {
     flex-direction: column;
+    align-items: flex-start;
     gap: 1rem;
-    text-align: center;
   }
-
+  
+  .card-actions {
+    align-self: flex-end;
+  }
+  
   .info-row {
     flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .info-value {
+    text-align: left;
+    margin-top: 0.25rem;
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .smtp-accounts-container {
-    padding: 0.5rem;
+    padding: 1rem 0.75rem;
   }
-
+  
   .account-card {
     padding: 1rem;
-  }
-
-  .add-account-btn {
-    width: 100%;
-    justify-content: center;
   }
 }
