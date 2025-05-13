@@ -85,7 +85,8 @@
 }
 
 .icon-btn.delete:hover {
-  color: #ef4444; /* Red color for delete */
+  color: #ef4444;
+  /* Red color for delete */
   background: var(--gray-hover);
 }
 
@@ -116,7 +117,8 @@
 }
 
 .unavailable {
-  color: #ef4444 !important; /* Red color for unavailable */
+  color: #ef4444 !important;
+  /* Red color for unavailable */
 }
 
 /* Responsive Breakpoints */
@@ -143,6 +145,9 @@
   }
 
   .accounts-grid {
+    margin: auto;
+    width: 100%;
+    display: block;
     grid-template-columns: 1fr;
   }
 

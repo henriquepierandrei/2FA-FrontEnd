@@ -72,7 +72,7 @@
   }
 
   .mobile-sidebar .nav-item:hover {
-    background: var(--primary-lighter);
+    background: var(--white);
   }
 
   .mobile-sidebar .logout-btn {
