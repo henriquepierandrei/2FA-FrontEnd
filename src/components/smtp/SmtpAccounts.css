@@ -41,7 +41,6 @@
 
 .account-card {
   background: var(--white);
-  width: max-content;
   border-radius: 8px;
   padding: 1.5rem;
   box-shadow: var(--shadow);
