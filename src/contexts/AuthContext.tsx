@@ -59,8 +59,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Update tokens
       Cookies.set('accessToken', access_token);
       Cookies.set('refreshToken', refresh_token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
+      
       // Setup next refresh
       setupRefreshTimer(access_token_expires_in);
     } catch (error) {
