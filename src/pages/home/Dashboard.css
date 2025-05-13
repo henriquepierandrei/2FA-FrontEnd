@@ -5,6 +5,7 @@
 }
 
 .dashboard-content {
+  height: 100vh;
   flex: 1;
   padding: 1.5rem;
   overflow-y: auto;
