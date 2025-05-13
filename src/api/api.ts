@@ -152,7 +152,7 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
       delete config.headers['Content-Type'];
     }
 
-    // Inclui o accessToken apenas quando a requisição não for para o endpoint de refresh
+    // Verifica se a requisição é para o endpoint de refresh e NÃO adiciona o token
     if (accessToken && !config.url?.includes('/auth/refresh')) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -176,14 +176,22 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
           isRefreshing = true;
 
           try {
-            // Apenas envia o refreshToken, sem o accessToken no cabeçalho
-            const response = await api.post<TokenResponse>('/auth/refresh', {
+            // Cria uma instância temporária para a chamada de refresh
+            // para garantir que não haverá interferência de interceptors
+            const refreshApi = axios.create({
+              baseURL: 'https://twofaspring-latest.onrender.com/api/v1',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            const response = await refreshApi.post<TokenResponse>('/auth/refresh', {
               refreshToken
             });
 
             const { accessToken, refreshToken: newRefreshToken } = response.data;
 
-            // Atualiza os cookies com os novos tokens
             setCookie(ctx, 'accessToken', accessToken, {
               path: '/',
               secure: process.env.NODE_ENV === 'production',
@@ -196,10 +204,8 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
               sameSite: 'strict'
             });
 
-            // Atualiza o cabeçalho com o novo accessToken
             api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
-            // Reenvia todas as requisições falhas com o novo token
             failedRequestQueue.forEach(request => {
               request.onSuccess(accessToken);
             });
@@ -212,7 +218,10 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
 
             setCookie(ctx, 'accessToken', '', { path: '/' });
             setCookie(ctx, 'refreshToken', '', { path: '/' });
-            window.location.href = '/login';
+            
+            if (typeof window !== 'undefined') {
+              window.location.href = '/login';
+            }
           } finally {
             isRefreshing = false;
             failedRequestQueue = [];
@@ -240,5 +249,4 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
 }
 
 export const api = setupAPIClient();
-
 
