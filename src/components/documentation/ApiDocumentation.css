@@ -61,7 +61,7 @@
 
 .badge.version {
     background: transparent;
-    border: 1px solid var(--text-lighter);
+    border: 1px solid var(--primary-light);
 }
 
 .badge.status::after {
@@ -106,7 +106,7 @@
     padding: 1.5rem;
     box-shadow: var(--shadow);
     transition: transform 0.3s ease;
-    border-left: 4px solid var(--text-lighter);
+    border-left: 4px solid var(--primary-light);
 }
 
 
@@ -130,7 +130,7 @@
     padding: 0.001rem 1.5rem;
     margin: 1.2rem 0;
     box-shadow: var(--shadow);
-    border-left: 4px solid var(--text-lighter);}
+    border-left: 4px solid var(--primary-light);}
 
 .rules-card h3 {
     color: var(--text-primary);
@@ -208,7 +208,7 @@
     padding: 0.5rem 1.5rem;
     margin-top: 2rem;
     box-shadow: var(--shadow);
-    border-left: 4px solid var(--text-lighter);
+    border-left: 4px solid var(--primary-light);
 }
 
 .template-example h3 {
@@ -283,7 +283,7 @@
     gap: 0.75rem;
     background: var(--white);
     border-top: 3px solid rgb(55, 61, 59);
-    border-left: 4px solid var(--text-lighter);
+    border-left: 4px solid var(--primary-light);
     padding: 0.75rem 1.25rem;
     border-radius: 0.55rem;
     font-weight: 500;
