@@ -31,7 +31,18 @@
     box-shadow: var(--shadow);
     overflow-x: auto;
 }
+.logs-table-container::-webkit-scrollbar {
+  width: 8px; /* Largura da barra de rolagem para navegadores WebKit (Safari, Chrome) */
+}
 
+.logs-table-container::-webkit-scrollbar-track {
+  background: transparent; /* Cor de fundo da trilha da barra de rolagem */
+}
+
+.logs-table-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Cor do "polegar" da barra de rolagem */
+  border-radius: 6px; /* Arredondamento das bordas do "polegar" */
+}
 .logs-table {
     width: 100%;
     border-collapse: separate;
