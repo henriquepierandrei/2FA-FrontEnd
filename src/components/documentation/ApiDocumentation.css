@@ -282,7 +282,7 @@
     align-items: center;
     gap: 0.75rem;
     background: var(--white);
-    border-top: 3px solid rgb(55, 61, 59);
+    border-top: 3px solid var(--primary-light);
     border-left: 4px solid var(--primary-light);
     padding: 0.75rem 1.25rem;
     border-radius: 0.55rem;
