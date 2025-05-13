@@ -330,7 +330,7 @@
 .docs-nav {
     position: sticky;
     top: 1rem;
-    z-index: 9999999;
+    z-index: 99;
     padding-left: 1rem;
     background: var(--white);
     border-radius: 0.5rem;
