@@ -129,6 +129,8 @@ interface TokenResponse {
   refreshToken: string;
 }
 
+// Função auxiliar para armazenar tokens
+
 let isRefreshing = false;
 let failedRequestQueue: Array<{
   onSuccess: (token: string) => void;
@@ -192,17 +194,23 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
 
             const { accessToken, refreshToken: newRefreshToken } = response.data;
 
+            // Garante que os cookies são atualizados corretamente com os novos tokens
             setCookie(ctx, 'accessToken', accessToken, {
               path: '/',
               secure: process.env.NODE_ENV === 'production',
-              sameSite: 'strict'
+              sameSite: 'strict',
+              maxAge: 60 * 60 * 24 * 30 // 30 dias
             });
 
             setCookie(ctx, 'refreshToken', newRefreshToken, {
               path: '/',
               secure: process.env.NODE_ENV === 'production',
-              sameSite: 'strict'
+              sameSite: 'strict',
+              maxAge: 60 * 60 * 24 * 30 // 30 dias
             });
+            
+            // Log para debug (remover em produção)
+            console.log('Tokens atualizados após refresh:', { accessToken, newRefreshToken });
 
             api.defaults.headers.Authorization = `Bearer ${accessToken}`;
 
@@ -212,12 +220,22 @@ export function setupAPIClient(ctx: any = undefined): AxiosInstance {
 
             return api(originalConfig);
           } catch (err) {
+            // Erros durante o refresh devem limpar os tokens e redirecionar para login
             failedRequestQueue.forEach(request => {
               request.onFailure(err as AxiosError);
             });
 
-            setCookie(ctx, 'accessToken', '', { path: '/' });
-            setCookie(ctx, 'refreshToken', '', { path: '/' });
+            // Limpa os tokens nos cookies
+            setCookie(ctx, 'accessToken', '', { 
+              path: '/', 
+              maxAge: -1 
+            });
+            setCookie(ctx, 'refreshToken', '', { 
+              path: '/', 
+              maxAge: -1 
+            });
+            
+            console.log('Erro durante refresh, tokens removidos');
             
             if (typeof window !== 'undefined') {
               window.location.href = '/login';
