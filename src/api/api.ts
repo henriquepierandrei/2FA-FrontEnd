@@ -146,7 +146,7 @@ let isRefreshing = false;
 let failedRequestQueue: FailedRequest[] = [];
 
 export const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8080', // ajuste conforme seu backend
+  baseURL: 'https://twofaspring-latest.onrender.com/api/v1', // ajuste conforme seu backend
 });
 
 api.interceptors.request.use((config) => {
